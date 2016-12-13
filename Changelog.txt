@@ -1,0 +1,353 @@
+﻿ _______________________________________________________________________________________________________
+|_______________________________________________NKE0.7d:________________________________________________|
+|____________________________________ATUALIZADO em Dezembro/2016________________________________________|   	
+| - Driver LED e Timer atualizados na pasta Placa.							|
+| - Adicionado cabeçalho driver_includes.h na pasta Placa.						|
+| - Removido arquivos init e interrupt da pasta Placa.							|
+| - Adicionada função ini_serial_fila no arquivo initkernel na pasta Kernel.				|
+|													|
+|   Funções de usuário disponíveis na versão:								|
+|	void taskcreate(int *ID,void (*funcao)());							|
+
+|	void semwait(sem_t *semaforo);									|
+|	
+void sempost(sem_t *semaforo);									|
+|	void seminit(sem_t *semaforo, int ValorInicial);						|
+|	void writelcdn(int msg,int pos);								|
+|	void writelcds(char* msg,int pos);								|
+
+|	void taskexit(void);										|
+
+|	void sleep(int time);										|
+
+|	void msleep(int time);										|
+
+|	void usleep(int time);										|
+
+|	void ligaLed(int valor);									|
+|	
+void start(int scheduler);									|
+
+|	void taskjoin(int identificador);								|
+
+|	void setmyname(const char *name);								|
+
+|	void getmynumber(int *number);
+									|
+|	void nkprint(char *fmt,void *number);
+								|
+|	void nkread(char *tipo,void *value);								|
+|													|
+|______________________________________________NKE0.7c:_________________________________________________|
+________________________________________ATUALIZADO em Maio/2016__________________________________________
+ - Chamada nkread adicionada.
+
+   Funções de usuário disponíveis na versão:                                                                                    
+	void taskcreate(int *ID,void (*funcao)());
+	void semwait(sem_t *semaforo);
+	void sempost(sem_t *semaforo);
+	void seminit(sem_t *semaforo, int ValorInicial);
+	void writelcdn(int msg,int pos);
+	void writelcds(char* msg,int pos);
+	void taskexit(void);
+	void sleep(int time);
+	void msleep(int time);
+	void usleep(int time);
+	void ligaLed(int valor);
+	void start(int scheduler);
+	void taskjoin(int identificador);
+	void setmyname(const char *name);
+	void nkprint(char *fmt,void *number);
+	void getmynumber(int *number);
+
+_________________________________________ATUALIZADO em Março/2015___________________________________________   	
+Baseado na versão NKE0.7a
+ - Todas as chamadas de sistemas agora estão em minusculo.
+
+   Funções de usuário disponíveis na versão:                                                                                    
+	void taskcreate(int *ID,void (*funcao)());
+	void semwait(sem_t *semaforo);
+	void sempost(sem_t *semaforo);
+	void seminit(sem_t *semaforo, int ValorInicial);
+	void writelcdn(int msg,int pos);
+	void writelcds(char* msg,int pos);
+	void taskexit(void);
+	void sleep(int time);
+	void msleep(int time);
+	void usleep(int time);
+	void ligaLed(int valor);
+	void start(int scheduler);
+	void taskjoin(int identificador);
+	void setmyname(const char *name);
+	void nkprint(char *fmt,void *number);
+	void getmynumber(int *number);
+____________________________________________________________________________________________________________
+
+0.7a
+  
+
+O NKE está 100% de acordo com o artigo publicado na SBESC.
+
+
+
+0.5b
+
+
+
+Todas as variaveis estão em inglês agora.
+
+TaskCreate, mudou o primeiro argumento:
+ 
+de:
+    int ID
+ 
+para:
+    int *ID
+
+
+
+Adicionado um novo campo para nome da tarefa no descritor "name".
+
+
+Adicionado rotina TTYplot no sistema.
+    - Não pode ser usado com NENHUMA outra rotina TTY.
+
+
+Adicionado nova chamada de sistema "WhoIam".
+
+    - A chamada atribui um nome a tarefa.
+
+
+Adicionado um novo define no kernel.h para o TTYshared "SHARED_NUMBER"
+
+    - SHARED_NUMBER sempre deve ser maior que 1 para não haver erros.
+
+
+Adicionado rotina TTYshared no sistema para a escrita de variaveis da aplicação.
+
+    - Caso deseja escrever algum dado da aplicação no kernel utilize o vetor int shared[...].
+
+    - O vetor int shared possui um número de possições definidos por SHARED_NUMBER.
+
+    - TTYshared EXECUTA A CADA INTERRUPÇÃO DO SISTEMA. <------
+
+
+Adicionado arquivo plot.R na raiz do kernel.
+
+    - Utiliza a biblioteca ggplot2
+
+
+Terminal possuí um novo argumento "--plot"
+
+
+Corrigido um bug que causava uma linha em branco adicional em cada \n do printk.
+
+
+O printk não deve mais ser utilizado na aplicação. (caso utilizado há possibilidades de erros)
+
+
+Programas de aplicação atualizados.
+
+
+Makefile utiliza wildcard nas pastas Placa e Kernel agora.
+
+
+-----------------------------------------------------------------------------------------
+
+
+0.5a 
+
+Não foi lançada. Motivo: alpha de arquivos
+
+
+-----------------------------------------------------------------------------------------
+
+
+﻿0.5
+
+
+Arrumado o erro de seção crítica que ocorria nas chamadas de sistema.
+
+    - Retirado o vetor static global do arquivo syscall.c.
+
+    - Agora os parâmetros são enviados por uma struct "Parameters" local e que têm seu endereço enviado via registrador "r1".
+
+
+As chamadas de sistema voltaram a possuir o mesmo modelo de arquivos da versão 0.3.
+
+    - Chamadas acessadas pelo sistema ficam no arquivo syscall.c \ syscall.h.
+
+    - Chamadas acessadas pelo usuário ficam no arquivo usercall.c \ usercall.h.
+
+
+A Chamada de sistema WaitPeriod foi atualizada.
+
+    - Agora ela não possui mais parâmetros.
+
+    - Bloqueia a tarefa até que seu período ocorra.
+
+
+Retirado funções não mais utilizadas.
+
+    ex: SleepLoko.
+
+
+Agora o código não gera mais warnings na arquitetura de 32 bits.
+
+
+Agora o ./terminal64 ou ./terminal32 não geram mais arquivos de log automaticamente.
+
+    - Adicionado o parâmetro -f para gerar arquivo de log.
+
+
+Adicionado dois novos arquivos:
+    * debug.c e debug.h
+   
+    - Eles herdaram as funções de debug do sistema que estava presente no arquivo monitor.c.
+
+
+Os arquivos monitor.c e monitor.h não existem mais.
+
+    - Funções de debug agora estão no arquivo debug.c.
+
+    - O printk agora está presente no arquivo /Placa/uart.c.
+
+    - As funções que utilizavam o terminal, com exceção da Printk, não existem mais.
+
+
+O printk se tornou uma função que pode ser acessada por qualquer arquivo, inclusive a aplicação.
+
+    ---> ELA NÃO É BLOQUEANTE <---
+
+
+Para adicionar o terminal em programas que não utilizem o PaNKE basta copiar os arquivos /Placa/uart.c e /Placa/uart.h e utilizar a função printk.
+
+    - O terminal ainda NÃO funciona com ethernet.
+
+
+-----------------------------------------------------------------------------------------
+
+
+0.4f
+
+-Inclusão da função uSleep;
+	-Teoricamente as funções de espera estão funcionando corretamente (sleep, msleep e usleep).
+
+
+-----------------------------------------------------------------------------------------
+
+0.4e
+
+O PaNKE voltou a ser compatível com 32 bits.
+
+Corrigido o erro do terminal que causava "Erro de Segmentação" em alguns sistemas.
+
+Agora existe dois terminais:
+  - Terminal de 32 bits "terminal32"
+  - Terminal de 64 bits "terminal64"
+
+-----------------------------------------------------------------------------------------
+
+0.4d
+
+Agora a função printk escreve ponto flutuante %f;
+  - É possível utilizar: %.1f, %.2f, %.3f ...
+
+
+-----------------------------------------------------------------------------------------
+
+0.4c
+
+Adicionado uma função printk para efetuar a escrita no monitor.
+ - A função funciona de maneira idêntica ao printf;
+ - %f ainda não escreve ponto flutuante;
+ - Escopo:
+    void printk(const char *fmt, ...);
+    
+Todas as chamadas TTY's foram reescritas utilizando somente printk.
+
+-----------------------------------------------------------------------------------------
+
+0.4b
+
+Corrigido um erro que mostrava erroneamente a main disputando no instante zero dos processos.
+
+Chamadas Sleep's foram reativadas e agora funcionam em qualquer tipo de escalonamento.
+
+-----------------------------------------------------------------------------------------
+0.4
+
+Arrumado o erro que gerava mau funcionando no algoritmo RR.
+
+Chamadas Sleep's foram COMPLETAMENTE DESABILITADAS.  
+
+Adicionado o algoritmo Earlist Deadline First (EDF).
+
+Adicionado o uso de dois terminais ao executar o terminal (um menu e um listador)
+./terminal [serial_device] [tty_out] [b=baudrate] [file.hex]
+
+ * "b=" seta o baudrate do terminal, caso não seja informado ele será 19200
+ * "/dev/tty" seta qual o terminal de comunicação do ./terminal, caso não seja informado o padrão é "/dev/ttyUSB0"
+ * "/dev/pts/" seta qual o terminal que irá listar os output do PaNKE, caso não seja informado ele listará no terminal que disparou o ./terminal (maneira que funcionava antigamente)
+ * Caso nenhum parâmetro comece com essas strings, esse parâmetro será o arquivo ".hex" a se enviar para a placa, caso não seja informado ele mantém os dados da memoria do kit intacta.
+
+
+-----------------------------------------------------------------------------------------
+NÃO FUNCIONAL !!!!!!!!!!!!!!!!!!!!!!!!!
+0.3
+
+Implementado completamente o algoritmo Rate-Monotonic, todavia não há Sleep's nesse algoritmo ainda.
+
+Função Adicionada:
+  TTYstart
+    -Adicionado uma chamada para realização de POST no termino da chamada de sistema Start. Será apresentado os seguintes dados referente ao PaNKE:
+      *Tempo de Interrupção;
+      *Tarefas Inseridas e suas respectivas prioridades;
+      *Composição da Ready List no momento "zero" de execução;
+      *Tempo computacional, período e suas respectivas prioridades.
+      **Obs: O Tempo computacional e o período são dados por interrupção, ou seja, quantas interrupções são necessárias para que seus tempos ocorram;
+      
+Nova Estrutura de dados adicionada:
+  Parameters
+    - Possui exatamente cinco campos;
+      *) int CallNumber;      Número da chamada de sistema
+      *) unsigned char *p0;   Primeiro parâmetro da chamada de sistema;
+      *) unsigned char *p1;   Segundo parâmetro da chamada de sistema;
+      *) unsigned char *p2;   Terceiro parâmetro da chamada de sistema;
+      *) unsigned char *p3;   Quarto parâmetro da chamada de sistema;
+    - Utilizado somente para a passagem de parâmetros na chamada de sistema;
+    - Sua definição está no arquivo syscall.h;
+    
+
+Chamadas de sistemas foram remodeladas:
+  -Arquivos usercall.c e usercall.h foram depreciados;
+  -As funções relativas as chamadas de sistemas (usuário e sistema) encontram-se SOMENTE no arquivo syscall.c e syscall.h, essa medida foi tomada para que os parâmetros fossem passados através de uma struct Parameters global SOMENTE nesse modulo.
+  
+A função Dispatcher foi refeita:
+  - Agora ela realiza o disparo de tarefas SOMENTE através do ESTADO DE OPERAÇÂO da TaskRunning;
+    * Estado BLOCK, DEAD ou READY disparará a próxima tarefa da Ready List, ou seja, TaskRunning mudara de valor;
+    * Estado RUNNING continuará a execução da tarefa TaskRunning.
+    
+A função Select foi remodelada:
+  - Agora ela é a responsável por realizar o comportamento do algoritmo de escalonamento selecionado em um SLOT TIME;
+  
+A função InsereReadyList possui agora um algoritmo de inserção a prioridade estática.
+
+A chamada de sistema Start agora é a responsável por determinar as prioridades das tarefas caso necessário.
+      
+
+
+-----------------------------------------------------------------------------------------
+
+0.2bSleep
+
+Chamadas de sistema Sleep, mSleep e uSleep foram atualizadas.
+  -Agora elas bloqueiam apenas as tarefas que realizaram a chamada de sistema. Antes elas bloqueavam todo o nanokernel.
+  
+-----------------------------------------------------------------------------------------
+
+0.2b
+
+Função de uso do terminal teve seu nome substituído.
+  -Antes "Terminus" --> Agora "TTYout"
+
