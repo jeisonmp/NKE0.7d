@@ -1,2 +1,5 @@
-# readme
-Nke 0.7c para LPC2378
+Nanokernel de propósito geral desenvolvido pela Universidade Estadual do Rio Grande do Sul.
+
+Versão: 0.7d
+
+Plataforma alvo: ARM-LPC2378
