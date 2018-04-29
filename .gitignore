@@ -3,6 +3,8 @@
 *.o
 *.obj
 *.iobj
+*.elf
+*.hex
 
 # Debug and Release paths
 Debug

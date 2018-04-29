@@ -5,9 +5,9 @@ CLOCKFREQ = 12000
 TARGET  = PaNKE
 #Para Alterar a aplicação mude o primeiro arquivo .c
 CSOURCES = ../Aplicacoes/smallocteste3.c $(wildcard ../Aplicacoes/bcp/*.c) $(wildcard ../Kernel/*.c) $(wildcard ../Placa/*.c)
-ASOURCES = $(wildcard ../Aplicacoes/bcp/*.h) $(wildcard ../Kernel/*.S) $(wildcard ../Placa/*.S)
+ASOURCES = $(wildcard ../Kernel/*.S) $(wildcard ../Placa/*.S)
 #Para Alterar a aplicação mude o primeiro arquivo .h
-HEADERS = $(wildcard ../Kernel/*.h) $(wildcard ../Placa/*.h)
+HEADERS = $(wildcard ../Aplicacoes/bcp/*.h) $(wildcard ../Kernel/*.h) $(wildcard ../Placa/*.h)
 MODELO = 2011
 TERMINAL = ltser
 BAUDRATE = 19200

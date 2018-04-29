@@ -56,10 +56,10 @@ typedef struct
 typedef struct
 {
   int CallNumber;
-  void *p0;
-  void *p1;
-  void *p2;
-  void *p3;
+  unsigned int *p0;
+  unsigned char *p1;
+  unsigned char *p2;
+  unsigned char *p3;
 }Parameters;
 
 typedef struct

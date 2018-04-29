@@ -21,7 +21,7 @@ enum sys_temCall{
   SETMYNAME,
   NKPRINT,
   GETMYNUMBER,
-  NKREAD,
+  //NKREAD, /// TODO: Nao implementado
   NKMALLOC,
   NKFREE
 };
@@ -49,6 +49,6 @@ void sys_taskjoin(int identificador);
 void sys_setmyname(const char *name);
 void sys_nkprint(char *fmt,void *number);
 void sys_getmynumber(int *number);
-void sys_nkread(char *tipo, void *value);
+//void sys_nkread(char *tipo, void *value); /// TODO: Nao implementado
 
 #endif

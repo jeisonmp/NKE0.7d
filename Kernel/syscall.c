@@ -2,6 +2,12 @@
 #include "smalloc.h"
 //#include "tlsf.h"
 
+static long int tmenor = 1000;
+static long int tmaior = 0;
+static long int tmedia = 0;
+static long int cont = 0;
+static long int soma = 0;
+
 void DoSystemCall(unsigned int *pilha,Parameters *arg)
 { 
   Descriptors[TaskRunning].SP=pilha;
@@ -65,8 +71,8 @@ void DoSystemCall(unsigned int *pilha,Parameters *arg)
     case GETMYNUMBER:
        sys_getmynumber((int *)arg->p0);
        break;
-    case NKREAD:
-       sys_nkread((char *)arg->p0,(void *)arg->p1);
+    //case NKREAD:
+       //sys_nkread((char *)arg->p0,(void *)arg->p1); /// TODO: Nao implementado
        break;
     case NKMALLOC:
        timeini = T1TC * 2;

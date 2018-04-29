@@ -25,7 +25,7 @@
 
 #define OFFSET    256
 #define SZREG_log 8    //SZREG_log deve ser um numero igual a Log2(OFFSET). Ex: Log2(32) = 5
-#define SIZEMEM   3840 //3960
+#define SIZEMEM   3776 //3960
 #define NBITMASK  4
 
 /*

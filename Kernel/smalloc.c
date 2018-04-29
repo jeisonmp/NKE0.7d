@@ -187,7 +187,7 @@ int* smalloc(int _sizebytes)
 			{
 				//sys_nkprint(" 2.3.0");
 				//Se sobrou espaco menor ou igual ao tamanho do bloco da regiao entao marca como cheia.
-				if ((((int)end - (int)(head->nextfree))/4 + 1) - TB2[bitmask] <= TB2[bitmask])
+				if ((((int)end - (int)(head->nextfree))/4 + 1) - TB2[bitmask] < TB2[bitmask])
 				{
 					//sys_nkprint(" 2.3.1");
 					head->nextfree = end;
@@ -198,7 +198,7 @@ int* smalloc(int _sizebytes)
 					//sys_nkprint(" 2.3.2");
 					head->nextfree = head->nextfree + TB2[bitmask];
 					
-					if (head->nextfree >= (struct smalloc *)&MEMORY[SIZEMEM])
+					if (head->nextfree > (struct smalloc *)&MEMORY[SIZEMEM])
 					{
 						//sys_nkprint(" REGION %d FULL");
 						
