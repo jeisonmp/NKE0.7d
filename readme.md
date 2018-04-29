@@ -1,7 +1,8 @@
 Nanokernel de propósito geral desenvolvido pela Universidade Estadual do Rio Grande do Sul.
 
 Versão: 0.8a
-Mudanças: Inclusão de alocadores de memoria para sistemas embarcados de tempo real, Smalloc e TLSF.
+
+Alterações: Inclui de alocadores de memoria para sistemas embarcados de tempo real, Smalloc e TLSF.
 
 
 Original versão: 0.7d
