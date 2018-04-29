@@ -1,9 +1,15 @@
 #include "syscall.h"
+#include "smalloc.h"
+//#include "tlsf.h"
 
 void DoSystemCall(unsigned int *pilha,Parameters *arg)
 { 
   Descriptors[TaskRunning].SP=pilha;
   MoveToSP(&KernelStack[289]);
+  int timeini = 0;
+  int timefim = 0;
+  int tempo = 0;
+  
 #ifdef SHARED_NUMBER
   TTYshared(1);
 #endif
@@ -61,6 +67,40 @@ void DoSystemCall(unsigned int *pilha,Parameters *arg)
        break;
     case NKREAD:
        sys_nkread((char *)arg->p0,(void *)arg->p1);
+       break;
+    case NKMALLOC:
+       timeini = T1TC * 2;
+
+       *arg->p0 = smalloc((int)arg->p1);
+       //*arg->p0 = k_malloc((int)arg->p1);
+
+       
+       timefim = T1TC * 2;
+       tempo = timefim - timeini;
+       
+       if (tempo < tmenor)
+       {
+          tmenor = tempo;
+       }
+       if (tempo > tmaior)
+       {
+          tmaior = tempo;
+       }
+       cont++;
+       soma+= tempo;
+       tmedia = soma/cont;
+           
+       sys_nkprint(" menor: %d ", tmenor);
+       sys_nkprint(", maior: %d ", tmaior);
+       sys_nkprint(", media: %d ", tmedia);
+       sys_nkprint(", tempo: %dus", tempo);
+       sys_nkprint(", soma: %d", soma);
+       sys_nkprint(", cont: %d\n", cont);
+       
+       break;
+    case NKFREE:
+       sfree((void*)arg->p0);
+       //k_free((void*)arg->p0);
        break;
     default:
        break;
@@ -193,36 +233,4 @@ void sys_setmyname(const char *name)
 void sys_getmynumber(int *number)
 {
   *number=Descriptors[TaskRunning].Tid;
-}
-
-void sys_nkread(char *tipo, void *value)// endereço da variavel que recebe o dado solicitado será armazenado em serial_queue[posicao_a_inserir].value
-{
-  serial_fila[posicao_a_inserir] = TaskRunning;
-  serial_queue[posicao_a_inserir].tid=TaskRunning;
-	if(!strcmp(tipo,"%f"))//28/02/15 
-	   serial_queue[posicao_a_inserir].real=(void *)value;// value é o endereço da variável que recebe o dado solicitado na app
-	else if(!strcmp(tipo,"%.1f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%.2f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%.3f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%.4f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%.5f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%.6f"))
-        serial_queue[posicao_a_inserir].real=(void *)value;
-	else if(!strcmp(tipo,"%s"))
-        serial_queue[posicao_a_inserir].string=(void *)value;
-	else if(!strcmp(tipo,"%c"))//07/03/2015
-        serial_queue[posicao_a_inserir].caracter=(void *)value;
-	else if(!strcmp(tipo,"%d"))
-        serial_queue[posicao_a_inserir].inteiro=(void *)value;
-  Descriptors[TaskRunning].State=BLOCKED;
-  //printk("task %d está bloqueada aguardando dado\n",TaskRunning);
-  posicao_a_inserir++;  	
-  if(posicao_a_inserir == MaxNumberTask) posicao_a_inserir = 0;
-    //printk("[posicao_a_inserir] = %d \n", posicao_a_inserir);
-  Dispatcher();
 }

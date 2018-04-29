@@ -22,6 +22,8 @@ enum sys_temCall{
   NKPRINT,
   GETMYNUMBER,
   NKREAD,
+  NKMALLOC,
+  NKFREE
 };
 
 enum TaskEstados{

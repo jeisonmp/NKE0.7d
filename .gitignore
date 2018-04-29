@@ -1,0 +1,40 @@
+
+# Compiled Object files
+*.o
+*.obj
+*.iobj
+
+# Debug and Release paths
+Debug
+Release
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+#.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.pdb
+*.ipdb
+
+# Others
+*.opensdf
+*.sdf
+*.suo
+*.user
+*.ipch
+*.aps
+*.ilk

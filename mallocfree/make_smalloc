@@ -1,0 +1,17 @@
+#Para escrever comentários ##
+############################# Makefile ##########################
+all: main_adapt
+main_adapt: adaptalloc.o bcp.o main_adapt.o
+#-----> O compilador faz a ligação entre os dois objetos
+	gcc -o main_adapt adaptalloc.o bcp.o main_adapt.o
+#-----> Distancia com o botão TAB ### e não com espaços
+adaptalloc.o: adaptable/adaptalloc.c adaptable/adaptalloc.h
+	gcc -o adaptalloc.o -c adaptable/adaptalloc.c -W -Wall
+bcp.o: bcp/bcp.c bcp/bcp.h
+	gcc -o bcp.o -c bcp/bcp.c -W -Wall
+main_adapt.o: main_adapt.c adaptable/adaptalloc.h bcp/bcp.h
+	gcc -o main_adapt.o -c main_adapt.c -W -Wall
+clean:
+	rm -rf *.o
+mrproper: clean
+	rm -rf main_adapt

@@ -21,5 +21,7 @@ void setmyname(const char *name);
 void getmynumber(int *number);
 void nkprint(char *fmt,void *number);
 void nkread(char *tipo,void *value);
+void nkmalloc(int **ptr, int size);
+void nkfree(void *addr);
 
 #endif /* USERCALL_H_ */

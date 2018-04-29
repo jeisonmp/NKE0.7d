@@ -4,8 +4,8 @@ SERIALDEV = /dev/ttyS0
 CLOCKFREQ = 12000
 TARGET  = PaNKE
 #Para Alterar a aplicação mude o primeiro arquivo .c
-CSOURCES = ../Aplicacoes/Alternancia.c $(wildcard ../Kernel/*.c) $(wildcard ../Placa/*.c)
-ASOURCES = $(wildcard ../Kernel/*.S) $(wildcard ../Placa/*.S)
+CSOURCES = ../Aplicacoes/smallocteste3.c $(wildcard ../Aplicacoes/bcp/*.c) $(wildcard ../Kernel/*.c) $(wildcard ../Placa/*.c)
+ASOURCES = $(wildcard ../Aplicacoes/bcp/*.h) $(wildcard ../Kernel/*.S) $(wildcard ../Placa/*.S)
 #Para Alterar a aplicação mude o primeiro arquivo .h
 HEADERS = $(wildcard ../Kernel/*.h) $(wildcard ../Placa/*.h)
 MODELO = 2011
@@ -69,8 +69,7 @@ placa2: $(TARGET).hex
 isp: $(TARGET).hex
 	$(ISPPROG) $(TARGET).hex $(SERIALDEV) $(BAUDRATE) $(CLOCKFREQ)
 ispu: $(TARGET).hex
-	#$(ISPPROG) $(TARGET).hex /dev/ttyUSB0 $(BAUDRATE) $(CLOCKFREQ)
-	$(ISPPROG) $(TARGET).hex COM3 $(BAUDRATE) $(CLOCKFREQ)
+	$(ISPPROG) $(TARGET).hex /dev/ttyUSB0 $(BAUDRATE) $(CLOCKFREQ)
 ispu0: $(TARGET).hex
 	$(ISPPROG) $(TARGET).hex /dev/ttyUSB0 $(BAUDRATE) $(CLOCKFREQ)
 ispu1: $(TARGET).hex
@@ -94,5 +93,5 @@ isp7: $(TARGET).hex
 
 #Limpa, apagando os arquivos gerados pela compilacao
 clean:
-	-rm -f ../*/*.o ../*/*.elf ../*/*~ ../*/*.bin ../*/*.map ../*/*.hex
+	-rm -f ../*/*/*.o ../*/*.o ../*/*.elf ../*/*~ ../*/*.bin ../*/*.map ../*/*.hex
 .PHONY: all clean tser tseru isp ispu isp1 isp2 isp3 isp4 isp5 isp6 isp7

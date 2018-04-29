@@ -143,7 +143,24 @@ void nkread(char *tipo,void *value)
 {
  Parameters arg;
   arg.CallNumber=NKREAD;  
-  arg.p0=(char *)tipo;// o tipo do dado √© informado em arg.p0 28/02/15
-  arg.p1=(void *)value;// endere√ßo da variavel que recebe o dado solicitado ser√° armazenado em arg.p1
+  arg.p0=(char *)tipo;// o tipo do dado È informado em arg.p0 28/02/15
+  arg.p1=(void *)value;// endereÁo da variavel que recebe o dado solicitado ser· armazenado em arg.p1
+  CallSWI(0,&arg);
+}
+
+void nkmalloc(int **ptr, int size)
+{
+  Parameters arg;
+  arg.CallNumber=NKMALLOC;
+  arg.p0=(unsigned char *)(ptr);
+  arg.p1=(unsigned char *)size;
+  CallSWI(0,&arg);
+}
+
+void nkfree(void *addr)
+{
+  Parameters arg;
+  arg.CallNumber=NKFREE;
+  arg.p0=(unsigned char *)addr;
   CallSWI(0,&arg);
 }
