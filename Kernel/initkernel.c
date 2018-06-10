@@ -2,16 +2,18 @@
 
 void StartKernel(void)
 {
-  StartLED();
-  InitTimers();
+  SaidaLed();
   LCDinit();
   U0init();
-  ini_serial_fila();
+  RTC_CCR=0; RTC_CCR=2; RTC_CCR=0;
+  RTC_CCR=0x11;
+//  TCPLowLevelInit();
   StartReadyList();
   CreateIdleAndMain();
-  InitT0();
+  InitTimer0();
+//  drv_accept(5432);
   MoveToSP(&Descriptors[1].Stack[SizeTaskStack-1]);
-  IRQT0(); //liga o kernel
+  IRQTimer0(); //liga o kernel
 }
 
 void CreateIdleAndMain(void)
@@ -43,11 +45,4 @@ void StartReadyList(void)
   ready_queue.head=0;
   ready_queue.tail=0;
   return;
-}
-
-void ini_serial_fila(void)
-{
-   int i;
-	for(i=0; i<MaxNumberTask; i++)
-	     serial_fila[i] = 0;
 }

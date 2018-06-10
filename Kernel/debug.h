@@ -1,7 +1,9 @@
 #ifndef __MONITOR_H
 #define __MONITOR_H
 
+#include <arch/nxp/lpc23xx.h>
 #include "kernel.h"
+#include "../Placa/uart.h"
 
 /* Configuracoes especificas */
 #define SYSCLK 12000000

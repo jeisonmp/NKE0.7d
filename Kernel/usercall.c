@@ -139,17 +139,6 @@ void getmynumber(int *number)
   CallSWI(0,&arg);
 }
 
-/* TODO: Nao implementado
-void nkread(char *tipo,void *value)
-{
- Parameters arg;
-  arg.CallNumber=NKREAD;  
-  arg.p0=(char *)tipo;// o tipo do dado � informado em arg.p0 28/02/15
-  arg.p1=(void *)value;// endere�o da variavel que recebe o dado solicitado ser� armazenado em arg.p1
-  CallSWI(0,&arg);
-}
-*/
-
 void nkmalloc(int **ptr, int size)
 {
   Parameters arg;

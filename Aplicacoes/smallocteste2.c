@@ -1,152 +1,121 @@
 #include "../Kernel/kernel.h"
 #include "bcp/bcp.h"
-#include "bcp/bcp_b.h"
-#include "bcp/bcp_c.h"
 
-//
-// TESTE DE FRAGMENTACAO EXTERNA E INTERNA
-// com tentativas de alocação até estourar
-// a memória ou ocorrer fragmentação externa
-//
+int tmenor = 999999999;
+int tmaior = 0;
+int tmedia;
+int tcont = 0;
+int tsoma = 0;
+int ttempo = 0;
 
-// CONFIGURACAO USADA
-//    SZREG     32
-//    SIZEMEM   4000
-//    NBITMASK  8
-//    TB2[NBITMASK] = { 3,3,3,3,4,4,5,5 };
+int GLOBAL_CONT;
 
-void PROCESSO1()
+void TESTE1()
 {	
+	nkprint("**** INICIANDO TESTE NKMALLOC ****\n", 0);
+	
 	Bcp *BCPI = NULL;
 	Bcp *BCPF = NULL;
-	Bcp *novo = NULL;
+	Bcp *novo;
 	Bcp *aux;
 	
-	unsigned long int i = 3000000;
-	int tentativas = 0;
-	
+	int i = 0;
 	while(1)
-	{	
-		nkmalloc(&novo, sizeof(Bcp)); //novo = (Bcp *)smalloc(sizeof(Bcp));
-		nkprint(" val %d ", i);
-		
-		if (novo != (struct smalloc*)0x0)
+	{
+		i = 0;
+		GLOBAL_CONT = 0;
+		while(1)
 		{
-			novo->valor = i;
-			BCP_ADD(&BCPI, &BCPF, novo);
-		}
-		else
-		{
-			nkprint("\n ******* P1 FALHOU ******* ", 0);
-			nkprint("\n ******* P1 LIMPANDO MEMORIA *******", 0);
-			aux = BCPI;
-			while (aux != NULL)
+			nkmalloc(&novo, sizeof(Bcp)); //novo = (Bcp *)malloc_adapt(sizeof(Bcp));
+						
+			if (novo != NULL)
 			{
-				BCP_KILL(&BCPI, &BCPF, aux);
-				nkfree(aux);
-				aux = BCPI;
+				novo->valor = i;
+				BCP_ADD(&BCPI, &BCPF, novo);
+				nkprint(" VAL %d", i);
 			}
-			nkprint("\n ******* P1 LIMPEZA COMPLETA *******", 0);
-		}
-		
-		i++;
-	}
-	
-	nkprint("\n***** FINAL DE P1 *****", 0);
-	
-	taskexit();
-}
-
-void PROCESSO2()
-{	
-	Bcp_b *BCPI = NULL;
-	Bcp_b *BCPF = NULL;
-	Bcp_b *novo = NULL;
-	Bcp_b *aux;
-	
-	unsigned long int i = 4000000;
-	int tentativas = 0;
-	
-	while(1)
-	{	
-		nkmalloc(&novo, sizeof(Bcp_b)); //novo = (Bcp *)smalloc(sizeof(Bcp));
-		nkprint(" val %d ", i);
-		
-		if (novo != (struct smalloc*)0x0)
-		{
-			novo->valor = i;
-			BCP_ADD_b(&BCPI, &BCPF, novo);
-		}
-		else
-		{
-			nkprint("\n ******* P2 FALHOU ******* ", 0);
-			nkprint("\n ******* P2 LIMPANDO MEMORIA *******", 0);
-			aux = BCPI;
-			while (aux != NULL)
-			{	
-				BCP_KILL_b(&BCPI, &BCPF, aux);
-				nkfree(aux);
-				aux = BCPI;
-			}
-			nkprint("\n ******* P2 LIMPEZA COMPLETA *******", 0);
-		}
-		
-		i++;
-	}
-	
-	nkprint("\n***** FINAL DE P2 *****", 0);
-	
-	taskexit();
-}
-
-void PROCESSO3()
-{	
-	Bcp_c *BCPI = NULL;
-	Bcp_c *BCPF = NULL;
-	Bcp_c *novo = NULL;
-	Bcp_c *aux;
-	
-	unsigned long int i = 5000000;
-	int tentativas = 0;
-	
-	while(1)
-	{	
-		nkmalloc(&novo, sizeof(Bcp_c)); //novo = (Bcp *)smalloc(sizeof(Bcp));
-		nkprint(" val %d ", i);
-		
-		if (novo != (struct smalloc*)0x0)
-		{
-			novo->valor = i;
-			BCP_ADD_c(&BCPI, &BCPF, novo);
-		}
-		else
-		{
-			nkprint("\n ******* P3 FALHOU ******* ", 0);
-			nkprint("\n ******* P3 LIMPANDO MEMORIA *******", 0);
-			aux = BCPI;
-			while (aux != NULL)
+			else
 			{
-				BCP_KILL_c(&BCPI, &BCPF, aux);
-				nkfree(aux);
+				nkprint("\n--- LIMPEZA INICIADA POR PROCESSO %d ", 1);
+				Bcp *aux;
 				aux = BCPI;
+				while (aux != NULL)
+				{
+					BCP_KILL(&BCPI, &BCPF, aux);
+					nkfree(aux);
+					aux = BCPI;
+				}			
+				nkprint("--- CONTAGEM: %d\n", GLOBAL_CONT);
+				break;
 			}
-			nkprint("\n ******* P3 LIMPEZA COMPLETA *******", 0);
+			i++;
+			GLOBAL_CONT++;
 		}
+	}
 		
-		i++;
+	nkprint("INICIO ****VERIFICACAO DOS DADOS****\n", 0);
+	
+	aux = BCPI;
+	while (aux != NULL)
+	{
+		nkprint("left: %d - ", aux->left);
+		nkprint("end: %d - ", aux);
+		nkprint("right: %d\n", aux->right);
+		
+		aux = aux->right;
 	}
 	
-	nkprint("\n***** FINAL DE P3 *****", 0);
+	nkprint("\n***Testando liberacao de 2 recursos*****\n\n", 0);
+	
+	aux = BCPI;
+	while (aux != NULL)
+	{
+		if (aux->valor == 2)
+		{
+			nkprint("liberando dado %d...", aux->valor);
+			BCP_KILL(&BCPI, &BCPF, aux);
+			
+			nkfree(aux); //free_adapt(aux);
+			
+			nkprint("OK\n", 0);
+			
+			aux = BCPI;
+		}
+		else if (aux->valor == 4)
+		{
+			nkprint("liberando dado %d...", aux->valor);
+			BCP_KILL(&BCPI, &BCPF, aux);
+			nkfree(aux); //free_adapt(aux);
+			nkprint("OK\n", 0);
+			
+			aux = BCPI;
+		}
+
+		aux = aux->right;
+	}
+	
+	nkprint("\n\n****VERIFICACAO DOS DADOS****\n", 0);
+	
+	aux = BCPI;
+	while (aux != NULL)
+	{
+		nkprint("left: %d - ", aux->left);
+		nkprint("ptr: %d - ", aux);
+		nkprint("end: %d - ", &aux);
+		nkprint("right: %d\n", aux->right);
+		
+		aux = aux->right;
+	}
+	
+	nkprint("\n***** FIM *****\n\n", 0);
 	
 	taskexit();
 }
 
 int main(int argc, char *argv[])
 {
-	int t1, t2, t3;
-	taskcreate(&t1, PROCESSO1);   //size 3
-	taskcreate(&t2, PROCESSO2);   //size 4
-	taskcreate(&t3, PROCESSO3);   //size 5
+	int t1;
+	taskcreate(&t1, TESTE1);
 	start(RR);
 	return 0;
 }

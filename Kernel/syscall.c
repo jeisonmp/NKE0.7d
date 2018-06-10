@@ -2,11 +2,12 @@
 #include "smalloc.h"
 //#include "tlsf.h"
 
-static long int tmenor = 1000;
-static long int tmaior = 0;
-static long int tmedia = 0;
-static long int cont = 0;
-static long int soma = 0;
+extern int tmenor;
+extern int tmaior;
+extern int tmedia;
+extern int tcont;
+extern int tsoma;
+extern int ttempo;
 
 void DoSystemCall(unsigned int *pilha,Parameters *arg)
 { 
@@ -14,7 +15,6 @@ void DoSystemCall(unsigned int *pilha,Parameters *arg)
   MoveToSP(&KernelStack[289]);
   int timeini = 0;
   int timefim = 0;
-  int tempo = 0;
   
 #ifdef SHARED_NUMBER
   TTYshared(1);
@@ -71,42 +71,28 @@ void DoSystemCall(unsigned int *pilha,Parameters *arg)
     case GETMYNUMBER:
        sys_getmynumber((int *)arg->p0);
        break;
-    //case NKREAD:
-       //sys_nkread((char *)arg->p0,(void *)arg->p1); /// TODO: Nao implementado
-       break;
     case NKMALLOC:
        timeini = T1TC * 2;
-
-       *arg->p0 = smalloc((int)arg->p1);
-       //*arg->p0 = k_malloc((int)arg->p1);
-
-       
+       *arg->p0 = (int)smalloc((int)arg->p1);       
        timefim = T1TC * 2;
-       tempo = timefim - timeini;
+       ttempo = timefim - timeini;
        
-       if (tempo < tmenor)
+       if (ttempo < tmenor)
        {
-          tmenor = tempo;
+          tmenor = ttempo;
        }
-       if (tempo > tmaior)
+       if (ttempo > tmaior)
        {
-          tmaior = tempo;
+          tmaior = ttempo;
        }
-       cont++;
-       soma+= tempo;
-       tmedia = soma/cont;
-           
-       sys_nkprint(" menor: %d ", tmenor);
-       sys_nkprint(", maior: %d ", tmaior);
-       sys_nkprint(", media: %d ", tmedia);
-       sys_nkprint(", tempo: %dus", tempo);
-       sys_nkprint(", soma: %d", soma);
-       sys_nkprint(", cont: %d\n", cont);
+       
+       tcont++;
+       tsoma+= ttempo;
+       tmedia = tsoma/tcont;
        
        break;
     case NKFREE:
        sfree((void*)arg->p0);
-       //k_free((void*)arg->p0);
        break;
     default:
        break;
@@ -198,7 +184,7 @@ void sys_usleep(unsigned int micro)
 
 void sys_ligaled(int valor)
 {
-  LigaLED(valor);
+  FIO4PIN=~valor;
 }
 
 void sys_start(int scheduler)

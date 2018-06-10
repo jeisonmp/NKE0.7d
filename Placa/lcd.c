@@ -1,5 +1,16 @@
 #include "lcd.h"
 
+void StartLCD()
+{
+  init_timer1_lcd();
+  LCDinit();
+}
+void WaitTimer1(unsigned int t)
+{
+  unsigned int tf;
+  tf = T1TC + t;          /* tf = Valor futuro do T1TC */
+  while(tf != T1TC);      /* espera ate que tf==T1TC */
+}
 //Escreve *Char
 void LCDputchar(int c)
 {
@@ -7,7 +18,7 @@ void LCDputchar(int c)
   FIO2SET = LCD_RS;	/* RS=1: caractere */
   FIO2SET = LCD_E;
   FIO2CLR = LCD_E;
-  WaitT1(800);
+  WaitTimer1(800);
 }
 //Escreve Int
 void LCDnum(int valor)
@@ -43,17 +54,19 @@ void LCDcomando(int c)
   FIO2CLR = LCD_RS;	/* RS=0: comando */
   FIO2SET = LCD_E;
   FIO2CLR = LCD_E;
-  WaitT1(2000);
+  WaitTimer1(2000);
 }
 //Inicializa o LCD
 void LCDinit(void)
 {
+  init_timer1_lcd();
   /* Configura portas I/O do LCD */
   FIO3DIR |= 0xff;	/* Dados do LCD como saidas */
   FIO2DIR  |= LCD_E | LCD_RS;	/* EN e RS do LCD como saidas */
   FIO2CLR = LCD_E;
-  WaitT1(2000);
+  WaitTimer1(2000);
   LCDcomando(0x38);	/* Configura LCD para 2 linhas */
   LCDcomando(1);		/* Limpa display */
   LCDcomando(0x0c);	/* Apaga cursor */
 }
+

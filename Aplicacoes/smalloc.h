@@ -23,10 +23,10 @@
  * - TB2[NBITMASK] = Define o tamanho dos blocos em cada regiao.
  */
 
-#define SZREG     2048
-#define SZREG_log 11    //SZREG_log deve ser um numero igual a Log2(SZREG). Ex: Log2(32) = 5
-#define SIZEMEM   6044 //3960
-#define NBITMASK  2
+#define SZREG     256
+#define SZREG_log 8    //SZREG_log deve ser um numero igual a Log2(SZREG). Ex: Log2(32) = 5
+#define SIZEMEM   3843 //3960
+#define NBITMASK  4
 
 /*
  * BIT ARRAYS
@@ -40,7 +40,7 @@
 
 static uint32_t MEMORY[SIZEMEM];                                   // Memoria disponivel de tamanho 'sizemem'
 static uint32_t TB1 = 0; //0x0000000                               // Mapa de bits da memoria - 1=cheia, 0=nao cheia. Ex.: 0000011=Primeira e segunda regiao cheias.
-static uint8_t  TB2[NBITMASK] = {                       3,    4 };      // Define o tamanho dos blocos de cada regiao - 2o nivel
+static uint8_t  TB2[NBITMASK] = {         4,  5,   5,   5 };      // Define o tamanho dos blocos de cada regiao - 2o nivel
                                //64,128,256,512,1024,2048, 4096
 /*
  * CONSTANTES - NAO CONFIGURAVEIS

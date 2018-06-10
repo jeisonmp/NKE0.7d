@@ -114,7 +114,6 @@ void Select(unsigned int *pilha)
   Descriptors[TaskRunning].SP=pilha; //salva a pilha do contexto da task
   MoveToSP(&KernelStack[289]);
   WakeUP();
-  U0getchar();
   switch (SchedulerAlgorithm)
   {
     case RR:

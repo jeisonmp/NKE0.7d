@@ -12,24 +12,32 @@ struct bcp
 
 void BCP_KILL (Bcp **BCPI, Bcp **BCPF, Bcp *BCP)
 {
+	nkprint("\nfree %d", global_cont_free);
 	if (BCP == *BCPI)
 	{
+		nkprint(" (1)", 0);
 		if (BCP == *BCPF)
 		{
+			nkprint(" (1.1)", 0);
 			*BCPI = NULL;
 			*BCPF = NULL;
 		}
 		else
 		{
+			nkprint(" (1.2)", 0);
 			*BCPI = BCP->right;
+			(*BCPI)->left = NULL;
 		}
 	}
 	else if (BCP == *BCPF)
 	{
+		nkprint(" (2)", 0);
 		*BCPF = BCP->left;
+		(*BCPF)->right = NULL;
 	}
 	else
 	{
+		nkprint(" (3)", 0);
 		Bcp *ant = NULL;
 		Bcp *pos = NULL;
 

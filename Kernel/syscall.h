@@ -1,7 +1,9 @@
 #ifndef __sysCALL_H
 #define __sysCALL_H
 
+#include <arch/nxp/lpc23xx.h>
 #include "scheduler.h"
+#include "../Placa/lcd.h"
 #include "kernel.h"
 
 enum sys_temCall{
@@ -21,7 +23,6 @@ enum sys_temCall{
   SETMYNAME,
   NKPRINT,
   GETMYNUMBER,
-  //NKREAD, /// TODO: Nao implementado
   NKMALLOC,
   NKFREE
 };
@@ -49,6 +50,5 @@ void sys_taskjoin(int identificador);
 void sys_setmyname(const char *name);
 void sys_nkprint(char *fmt,void *number);
 void sys_getmynumber(int *number);
-//void sys_nkread(char *tipo, void *value); /// TODO: Nao implementado
 
 #endif

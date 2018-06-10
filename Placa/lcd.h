@@ -2,8 +2,8 @@
 #define __LCD_H
 
 #include <arch/nxp/lpc23xx.h>
-#include "Timer.h"
-
+#include "init.h"
+#include "interrupt.h"
 #include "../Kernel/syscall.h"
 
 #define LCD_E	8
@@ -52,6 +52,8 @@ X| 20 21 22 23 24 25 26 27 28 29 2A 2B 2C 2D 2E 2F|
 #define LINHA2E 0xCE
 #define LINHA2F 0xCF
 
+void StartLCD(void);
+void WaitTimer1(unsigned int t);
 void LCDputchar(int c);
 void LCDnum(int valor);
 void LCDputs(char *txt);

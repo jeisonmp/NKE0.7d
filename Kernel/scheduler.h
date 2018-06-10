@@ -2,6 +2,8 @@
 #define __SCHEDULER_H
 
 #include "kernel.h"
+#include "../Placa/lcd.h"
+#include "../Placa/interrupt.h"
 #include "syscall.h"
 #include "initkernel.h"
 #include "debug.h"

@@ -7,7 +7,7 @@
   extern int shared[SHARED_NUMBER-1];
 #endif
 
-#define PRINTK
+//#define PRINTK
 //#define DEBUG_START
 //#define DEBUG_SYSTEM
 //#define DEBUG_PLOT
@@ -23,9 +23,9 @@
 */
 #define ClkT 1
 //Define tamanho da pilha de cada tarefa
-#define SizeTaskStack 120
+#define SizeTaskStack 60
 //Tamanho da Fila
-#define MaxNumberTask 30
+#define MaxNumberTask 20
 
 typedef struct
 {
@@ -62,35 +62,13 @@ typedef struct
   unsigned char *p3;
 }Parameters;
 
-typedef struct
-{/*       Esta  struct  tem  por  objetivo  disponibilizar endereços para as tasks que chamam a chamada de sistema
-   nkread.    Quando  uma  task  quer  ler dados  da serial, uma serial queue  é colocada na  fila para esta task, 
-   respeitado a  ordem de  chegada. Quando chega dado na  uart0, a serial_queue da vez recebe o dado.
-   	 Atualmente  quatro  tipos  de  dados  são suportados. Cada  chamada  de sistema nkread receberá  o valor  no 
-   endereço da variável, por intermédio da serial queue, o tipo de dado que foi solicitado na mesma. Para aumentar
-   os tipos de dados deve-se declarar nesta struct o tipo  de  dado  que  vai poder ser lido  na serial  e enviado
-   para task. Também  deverá  ser  incluído em sys_nkread a verificação para o novo tipo  de dado possível  de ser
-   tratado.  E por  fim, ser incluída  a função  de tratamento  em uart.c para que  se  este  formato  de dado for
-   detectado, assim como é feito nos atuais. 
-   	Dúvidas: miguel_cafruni@hotmail.com                                                                        */
-  int tid;
-  float *real;//28/02/15float
-  char *string;
-  int *inteiro;//07/03/2015
-  char *caracter;
-}SerialData;
-
 extern unsigned int KernelStack[300];
 extern unsigned short TaskRunning;
 extern TaskDescriptor Descriptors[MaxNumberTask];
 extern ReadyList ready_queue;
 extern unsigned int NumberTaskAdd;
+extern unsigned int NumberTaskAddAll;
 extern int SchedulerAlgorithm;
-extern SerialData serial_queue[MaxNumberTask];
-
-extern unsigned short serial_fila[MaxNumberTask];
-extern unsigned short posicao_a_inserir;
-extern unsigned short posicao_a_att;
 
 void GoTask(unsigned int *SP,void (*PC)()) __attribute__ ((__long_call__));
 void MoveToSP(unsigned int *SP) __attribute__ ((__long_call__));
@@ -105,7 +83,12 @@ void idletask();
 
 
 //Includes necessario para o usuario do usuario
-#include "../Placa/driver_includes.h"
+#include <arch/nxp/lpc23xx.h>
+#include "../Kernel/initkernel.h"
+#include "../Placa/interrupt.h"
+#include "../Placa/lcd.h"
+#include "../Placa/init.h"
+#include "../Placa/uart.h"
 #include "../Kernel/scheduler.h"
 #include "../Kernel/usercall.h"
 

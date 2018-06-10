@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "kernel.h": "c",
+        "initkernel.h": "c",
+        "interrupt.h": "c",
+        "uart.h": "c"
+    }
+}
