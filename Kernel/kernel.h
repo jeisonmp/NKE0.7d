@@ -23,9 +23,9 @@
 */
 #define ClkT 1
 //Define tamanho da pilha de cada tarefa
-#define SizeTaskStack 120
+#define SizeTaskStack 24
 //Tamanho da Fila
-#define MaxNumberTask 30
+#define MaxNumberTask 10
 
 typedef struct
 {

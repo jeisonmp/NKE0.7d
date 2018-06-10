@@ -4,7 +4,7 @@ SERIALDEV = /dev/ttyS0
 CLOCKFREQ = 12000
 TARGET  = PaNKE
 #Para Alterar a aplicação mude o primeiro arquivo .c
-CSOURCES = ../Aplicacoes/smallocteste3.c $(wildcard ../Aplicacoes/bcp/*.c) $(wildcard ../Kernel/*.c) $(wildcard ../Placa/*.c)
+CSOURCES = ../Aplicacoes/smallocteste5.c $(wildcard ../Aplicacoes/bcp/*.c) $(wildcard ../Kernel/*.c) $(wildcard ../Placa/*.c)
 ASOURCES = $(wildcard ../Kernel/*.S) $(wildcard ../Placa/*.S)
 #Para Alterar a aplicação mude o primeiro arquivo .h
 HEADERS = $(wildcard ../Aplicacoes/bcp/*.h) $(wildcard ../Kernel/*.h) $(wildcard ../Placa/*.h)

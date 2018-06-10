@@ -2,11 +2,11 @@
 #include "smalloc.h"
 //#include "tlsf.h"
 
-static long int tmenor = 1000;
-static long int tmaior = 0;
-static long int tmedia = 0;
-static long int cont = 0;
-static long int soma = 0;
+extern long int tmenor;
+extern long int tmaior;
+extern long int tmedia;
+extern long int tcont;
+extern long int tsoma;
 
 void DoSystemCall(unsigned int *pilha,Parameters *arg)
 { 
@@ -92,16 +92,9 @@ void DoSystemCall(unsigned int *pilha,Parameters *arg)
        {
           tmaior = tempo;
        }
-       cont++;
-       soma+= tempo;
-       tmedia = soma/cont;
-           
-       sys_nkprint(" menor: %d ", tmenor);
-       sys_nkprint(", maior: %d ", tmaior);
-       sys_nkprint(", media: %d ", tmedia);
-       sys_nkprint(", tempo: %dus", tempo);
-       sys_nkprint(", soma: %d", soma);
-       sys_nkprint(", cont: %d\n", cont);
+       tcont++;
+       tsoma+= tempo;
+       tmedia = tsoma/tcont;
        
        break;
     case NKFREE:
