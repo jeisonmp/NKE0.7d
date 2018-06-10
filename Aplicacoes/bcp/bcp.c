@@ -1,11 +1,7 @@
 #include "bcp.h"
 #include "../../Kernel/kernel.h"
 
-/*<Descricao>
- * Elimina processo da fila de processamento.
- *</Descricao>
- */
-void BCP_KILL (Bcp **BCPI, Bcp **BCPF, Bcp *BCP)
+void BCP_KILL (struct bcp **BCPI, struct bcp **BCPF, struct bcp *BCP)
 {
 	if (BCP == *BCPI)
 	{
@@ -58,10 +54,10 @@ void BCP_KILL (Bcp **BCPI, Bcp **BCPF, Bcp *BCP)
 /*
  * Adiciona processo.
  */
-int BCP_ADD (Bcp **inicio, Bcp **fim, Bcp *bcp)
+int BCP_ADD (struct bcp **inicio, struct bcp **fim, struct bcp *BCP)
 {
 	Bcp *novo;
-	novo = bcp;
+	novo = BCP;
 	
 	if (novo)
 	{
@@ -74,8 +70,10 @@ int BCP_ADD (Bcp **inicio, Bcp **fim, Bcp *bcp)
 /*
  * Fila
  */
-int BCP_ADD_FIFO(Bcp **inicio, Bcp **fim, Bcp **novo)
+int BCP_ADD_FIFO(struct bcp **inicio, struct bcp **fim, struct bcp **novo)
 {
+	//nkprint(" novo %d", *novo);
+
 	if (*inicio == NULL)
 	{
 		*inicio		    = *novo;
@@ -85,14 +83,10 @@ int BCP_ADD_FIFO(Bcp **inicio, Bcp **fim, Bcp **novo)
 	}
 	else
 	{
-		Bcp *old;
-
-		old = *fim;
-
-		(*fim)->right =  *novo;
+		(*novo)->left =  *fim; //nkprint(" novo->left %d", *fim);
+		(*fim)->right =  *novo; //nkprint(" ultimo->right %d", *novo);
 		*fim	      =  *novo;
 		(*fim)->right =  NULL;
-		(*novo)->left =  old;
 	}
 
 	return 1;
