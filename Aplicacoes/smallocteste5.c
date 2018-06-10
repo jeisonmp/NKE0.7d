@@ -48,9 +48,9 @@ void EMPTY_MEM(int process)
 	nkprint(" menor:%d", tmenor);
 	nkprint(" maior:%d", tmaior);
 	nkprint(" media:%d", tmedia);
-	nkprint(" bytes:%d", memoria);
-	nkprint(" fragInt:%d", fragInterna);
-	nkprint(" fragExt:%d", fragExterna);
+	//nkprint(" bytes:%d", memoria);
+	//nkprint(" fragInt:%d", fragInterna);
+	//nkprint(" fragExt:%d", fragExterna);
 	
 	memoria = 0;
 	fragInterna = 0;
@@ -173,7 +173,7 @@ void EMPTY_MEM(int process)
 }
 
 void PROCESSO1()
-{	
+{
 	Bcp *novo = NULL;
 	nkmalloc(&novo, sizeof(Bcp)); //novo = (Bcp *)smalloc(sizeof(Bcp));
 	
@@ -184,7 +184,6 @@ void PROCESSO1()
 		BCP_ADD(&BCPI1, &BCPF1, novo);
 	}
 	else {
-		sys_nkprint("VAZIOOOOOOOOOOOO", 0);
 		EMPTY_MEM(1);
 	}
 }
@@ -217,7 +216,6 @@ void PROCESSO3()
 		BCP_ADD_c(&BCPI3, &BCPF3, novo);	
 	}
 	else {
-		sys_nkprint("VAZIOOOOOOOOOOOO", 0);
 		EMPTY_MEM(3);
 	}
 }
@@ -232,13 +230,13 @@ void MAIN()
 	while(1)
 	{
 		random = (rand() % 10) + 1;
-		if (random < 6)
+		if (random < 4)
 		{
 			PROCESSO1();
 		}
-		/*else if (random > 3 && random < 7) {
+		else if (random > 3 && random < 7) {
 			PROCESSO2();
-		}*/
+		}
 		else {
 			PROCESSO3();
 		}

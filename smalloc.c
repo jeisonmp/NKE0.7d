@@ -13,8 +13,6 @@
 
 void k_heap_init() {}
 
-#include "smalloc.h"
-
 extern int fragInterna;
 extern int fragExterna;
 
@@ -81,8 +79,8 @@ int* smalloc(int _sizebytes)
 	* PROCEDIMENTO DE ALOCACAO
 	*/
 	
-	//int fragExtern = 0;
-	//int region = -1;
+	int fragExtern = 0;
+	int region = -1;
 
 	//Retem as informacoes da regiao
 	while (bitmask < NBITMASK)
@@ -103,10 +101,10 @@ int* smalloc(int _sizebytes)
 				break;
 			}
 			/// FRAGMENTACAO
-			/*else {
+			else {
 				fragExtern = 1;
 				region = bitmask+1;
-			}*/
+			}
 		}
 
 		bitmask++;
@@ -117,26 +115,23 @@ int* smalloc(int _sizebytes)
 		///
 		/// FRAGMENTACAO
 		///
-		/*
 		if (sizeints == 3)
 		{
-			//if (bitmask > 1)
+			//if (bitmask == 0)
 			{
 				fragInterna += 2*4;
 			}
+			/*else if (bitmask == 1 || bitmask == 2 || bitmask == 3) {
+				fragInterna += 2*4;
+			}*/
 		}
-		else if (sizeints == 4)
-		{
-			//if (bitmask == 2) 
-			{
-				fragInterna += 1*4;
-			}
+		else if (sizeints == 4) {
+			fragInterna += 1*4;
 		}
-		*/
 		
-		//printf("\nhead %x ", head);
-		//printf(" nextfree %x ", head->nextfree);
-		//printf(" end %x ", end);
+		//sys_nkprint("\nhead %d ", head);
+		//sys_nkprint(" nextfree %d ", head->nextfree);
+		//sys_nkprint(" end %d ", end);
 
 		if (!head->nextfree) //Se igual a 0 (vazia)
 		{ 
@@ -144,84 +139,88 @@ int* smalloc(int _sizebytes)
 			addr = (int*)(head) + 1; 
 			if (((struct smalloc*)addr + sizeints) >= end) // Se ocupou todo o bloco
 			{
-				//printf(" 1.1.0");
-				head->nextfree = end; //printf("nextfree %x ", head->nextfree);
-				SETBIT(TB1,bitmask); //printf(" REG %d FULL!", bitmask);
+				//sys_nkprint(" 1.1.0");
+				head->nextfree = end; //sys_nkprint("nextfree %d ", head->nextfree);
+				SETBIT(TB1,bitmask); //sys_nkprint(" REG %d FULL!", bitmask);
 			}
 			else
 			{
-				//printf(" 1.2.0");
-				head->nextfree = (struct smalloc *)(addr + TB2[bitmask]); //printf("nextfree %x ", head->nextfree);
+				//sys_nkprint(" 1.2.0");
+				head->nextfree = (struct smalloc *)(addr + TB2[bitmask]); //sys_nkprint("nextfree %d ", head->nextfree);
 			}
 		}
 		else
 		{
 			
-			//printf("2.0.0");
-			addr = (int*)head->nextfree; //printf(" addr %x ", addr);
+			//sys_nkprint("2.0.0");
+			addr = (int*)head->nextfree; //sys_nkprint(" addr %d ", addr);
 			
 			if (((struct smalloc *)(addr))->nextfree != NULL &&
 				((struct smalloc *)(addr))->nextfree != end) //se o proximo do proximo nao for o final
 			{
-				//printf(" 2.1.0");
-				head->nextfree = (((struct smalloc *)(addr))->nextfree); //printf("nextfree %x ", head->nextfree);
+				//sys_nkprint(" 2.1.0");
+				head->nextfree = (((struct smalloc *)(addr))->nextfree); //sys_nkprint("nextfree %d ", head->nextfree);
 			}
 			else if (((struct smalloc *)(addr))->nextfree != NULL &&
 				     ((struct smalloc *)(addr))->nextfree == end)
 			{
-				//printf(" 2.2.0 %d", bitmask);
-				head->nextfree = end; //printf(" nextfree %x ", head->nextfree);
-				SETBIT(TB1,bitmask); //printf(" REG %d FULL!", bitmask);
+				//sys_nkprint(" 2.2.0 %d", bitmask);
+				head->nextfree = end; //sys_nkprint(" nextfree %d ", head->nextfree);
+				SETBIT(TB1,bitmask); //sys_nkprint(" REG %d FULL!", bitmask);
 			}
 			else
 			{
-				//printf(" 2.3.0");
+				//sys_nkprint(" 2.3.0");
 				//Se sobrou espaco menor ou igual ao tamanho do bloco da regiao entao marca como cheia.
-				//printf(" size: %d sizeblk: %d", (((int)end - (int)(head->nextfree)) / 4 + 1) - TB2[bitmask], TB2[bitmask]);
+				//sys_nkprint(" size: %d ", (((int)end - (int)(head->nextfree)) / 4 + 1) - TB2[bitmask]);
+				//sys_nkprint("sizeblk: %d", TB2[bitmask]);
+				
 				if ((((int)end - (int)(head->nextfree))/4 + 1) - TB2[bitmask] < TB2[bitmask])
 				{
-					//printf(" 2.3.1");
-					head->nextfree = end; //printf(" nextfree %x ", head->nextfree);
-					SETBIT(TB1,bitmask); //printf(" REG %d FULL!", bitmask);
+					//sys_nkprint(" 2.3.1");
+					head->nextfree = end; //sys_nkprint(" nextfree %d ", head->nextfree);
+					SETBIT(TB1,bitmask); //sys_nkprint(" REG %d FULL!", bitmask);
 				}
 				else
 				{
-					//printf(" 2.3.2");
-					head->nextfree = head->nextfree + TB2[bitmask]; //printf(" nextfree %x ", head->nextfree);
+					//sys_nkprint(" 2.3.2");
+					head->nextfree = head->nextfree + TB2[bitmask]; //sys_nkprint(" nextfree %d ", head->nextfree);
 					
-					//printf(" &MEMORY[SIZEMEM]: %d", (struct smalloc *)&MEMORY[SIZEMEM]);
+					//sys_nkprint(" &MEMORY[SIZEMEM]: %d", (struct smalloc *)&MEMORY[SIZEMEM]);
 					if (head->nextfree >= (struct smalloc *)&MEMORY[SIZEMEM])
 					{
-						//printf(" 2.3.2.1");
-						head->nextfree = end; //printf(" nextfree %x ", head->nextfree);
-						SETBIT(TB1,bitmask); //printf(" REG %d FULL!", bitmask);
+						//sys_nkprint(" 2.3.2.1");
+						head->nextfree = end; //sys_nkprint(" nextfree %d ", head->nextfree);
+						SETBIT(TB1,bitmask); //sys_nkprint(" REG %d FULL!", bitmask);
 					}
 				}
 			}
 		}
 
-		//printf(" ( OK )");
+		//sys_nkprint(" ( OK )");
 		return addr;
 	}
 	else
 	{
 		/// FRAGMENTACAO
-		/*
-		if (fragExtern == 1) {
-			if (sizeints == 4) {
-				fragExterna += 1*4;
-			}
-			else if (sizeints == 5) {
-				if (region == 1 || region == 2) {
-					fragExterna += 2*4;
+		
+		//if (fragExtern == 1) 
+		{
+			//if (sizeints == 5) 
+			{				
+				//if (region == 1)
+				{
+					//fragExterna += 1*4;
 				}
-				else if (region == 2) {
+			}
+			/*
+			else if (sizeints == 4) {
+				if (region == 1) {
 					fragExterna += 1*4;
 				}
-			}
+			}*/
 		}
-		*/
-		return SMALLOCNULL;
+		return NULL;
 	}
 }
 /*
@@ -251,7 +250,7 @@ void PRINTMEMORY()
 
 			for (nav = 0; nav <= sizeregion; nav++)
 			{
-				printf("\n%x : value: %x", &MEMORY[posregion + nav], (MEMORY[posregion + nav]));
+				printf("\n%d : value: %d", &MEMORY[posregion + nav], (MEMORY[posregion + nav]));
 			}
 		}
 
